@@ -20,21 +20,33 @@ const Login = ({ onLogin }: LoginProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const { toast } = useToast();
 
+  // Dynamic API base URL - works for both localhost and production
+  const getApiBaseUrl = () => {
+    // In production (EC2), use relative path /api
+    // In development, use localhost:5001/api
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return 'http://localhost:5001/api';
+    } else {
+      return '/api';
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const API_BASE = getApiBaseUrl();
 
     if (isLogin) {
       // --- LOGIN ---
       try {
-        const res = await fetch("http://localhost:5001/api/login", {
+        const res = await fetch(`${API_BASE}/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify({ username: email, password }),
         });
 
         const data = await res.text();
 
-        if (data.includes("success")) {
+        if (res.ok) {
           toast({
             title: "Login Successful",
             description: "Welcome to HomeServices!",
@@ -76,26 +88,31 @@ const Login = ({ onLogin }: LoginProps) => {
       }
 
       try {
-        const res = await fetch("http://localhost:5001/api/register", {
+        const res = await fetch(`${API_BASE}/register`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, password, phone }),
+          body: JSON.stringify({ name, username: email, password, phone }),
         });
 
         const data = await res.text();
 
-        toast({
-          title: "Signup Response",
-          description: data,
-        });
-
-        if (data.includes("registered")) {
+        if (res.ok) {
+          toast({
+            title: "Signup Successful",
+            description: "Account created successfully!",
+          });
           setIsLogin(true);
           setEmail("");
           setPassword("");
           setConfirmPassword("");
           setName("");
           setPhone("");
+        } else {
+          toast({
+            title: "Signup Failed",
+            description: data,
+            variant: "destructive",
+          });
         }
       } catch (err) {
         toast({
@@ -156,11 +173,11 @@ const Login = ({ onLogin }: LoginProps) => {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="email">{isLogin ? "Email/Username" : "Email"}</Label>
+              <Label htmlFor="email">Email/Username</Label>
               <Input
                 id="email"
-                type={isLogin ? "text" : "email"}
-                placeholder={isLogin ? "HomeServices1" : "Enter your email"}
+                type="text"
+                placeholder="Enter your email or username"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -173,7 +190,7 @@ const Login = ({ onLogin }: LoginProps) => {
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder={isLogin ? "HomeServices1" : "Enter your password"}
+                  placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
