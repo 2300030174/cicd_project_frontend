@@ -10,6 +10,8 @@ interface LoginProps {
   onLogin: () => void;
 }
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://backend:5001";
+
 const Login = ({ onLogin }: LoginProps) => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
@@ -24,9 +26,8 @@ const Login = ({ onLogin }: LoginProps) => {
     e.preventDefault();
 
     if (isLogin) {
-      // --- LOGIN ---
       try {
-        const res = await fetch("http://localhost:5001/api/login", {
+        const res = await fetch(`${BACKEND_URL}/api/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
@@ -56,7 +57,6 @@ const Login = ({ onLogin }: LoginProps) => {
         console.error(err);
       }
     } else {
-      // --- SIGNUP ---
       if (password !== confirmPassword) {
         toast({
           title: "Password Mismatch",
@@ -76,7 +76,7 @@ const Login = ({ onLogin }: LoginProps) => {
       }
 
       try {
-        const res = await fetch("http://localhost:5001/api/register", {
+        const res = await fetch(`${BACKEND_URL}/api/register`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, email, password, phone }),
