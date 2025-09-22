@@ -26,11 +26,13 @@ const Login = ({ onLogin }: LoginProps) => {
     if (isLogin) {
       // --- LOGIN ---
       try {
-        const res = await fetch(`/api/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        });
+        const res = await fetch("/api/login", {  // Remove http://localhost:5001
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ username: email, password }), // Change email to username
+});
+
+
 
         const data = await res.text();
 
@@ -76,11 +78,12 @@ const Login = ({ onLogin }: LoginProps) => {
       }
 
       try {
-        const res = await fetch(`/api/register`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, password, phone }),
-        });
+        // REGISTER endpoint  
+const res = await fetch("/api/register", {  // Remove http://localhost:5001
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ name, username: email, password, phone }), // Change email to username
+});
 
         const data = await res.text();
 
