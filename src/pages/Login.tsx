@@ -10,7 +10,8 @@ interface LoginProps {
   onLogin: () => void;
 }
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://backend:5001";
+// Use environment variable for backend URL
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5001";
 
 const Login = ({ onLogin }: LoginProps) => {
   const [isLogin, setIsLogin] = useState(true);
@@ -36,42 +37,23 @@ const Login = ({ onLogin }: LoginProps) => {
         const data = await res.text();
 
         if (data.includes("success")) {
-          toast({
-            title: "Login Successful",
-            description: "Welcome to HomeServices!",
-          });
+          toast({ title: "Login Successful", description: "Welcome to HomeServices!" });
           onLogin();
         } else {
-          toast({
-            title: "Login Failed",
-            description: data,
-            variant: "destructive",
-          });
+          toast({ title: "Login Failed", description: data, variant: "destructive" });
         }
       } catch (err) {
-        toast({
-          title: "Error",
-          description: "Could not connect to server.",
-          variant: "destructive",
-        });
+        toast({ title: "Error", description: "Could not connect to server.", variant: "destructive" });
         console.error(err);
       }
     } else {
       if (password !== confirmPassword) {
-        toast({
-          title: "Password Mismatch",
-          description: "Passwords do not match.",
-          variant: "destructive",
-        });
+        toast({ title: "Password Mismatch", description: "Passwords do not match.", variant: "destructive" });
         return;
       }
 
       if (!name || !email || !password || !phone) {
-        toast({
-          title: "Missing Fields",
-          description: "Please fill in all required fields.",
-          variant: "destructive",
-        });
+        toast({ title: "Missing Fields", description: "Please fill in all required fields.", variant: "destructive" });
         return;
       }
 
@@ -84,25 +66,14 @@ const Login = ({ onLogin }: LoginProps) => {
 
         const data = await res.text();
 
-        toast({
-          title: "Signup Response",
-          description: data,
-        });
+        toast({ title: "Signup Response", description: data });
 
         if (data.includes("registered")) {
           setIsLogin(true);
-          setEmail("");
-          setPassword("");
-          setConfirmPassword("");
-          setName("");
-          setPhone("");
+          setEmail(""); setPassword(""); setConfirmPassword(""); setName(""); setPhone("");
         }
       } catch (err) {
-        toast({
-          title: "Error",
-          description: "Could not connect to server.",
-          variant: "destructive",
-        });
+        toast({ title: "Error", description: "Could not connect to server.", variant: "destructive" });
         console.error(err);
       }
     }
@@ -119,9 +90,7 @@ const Login = ({ onLogin }: LoginProps) => {
             {isLogin ? "Welcome Back" : "Join HomeServices"}
           </CardTitle>
           <CardDescription>
-            {isLogin
-              ? "Sign in to access home services"
-              : "Create your account to get started"}
+            {isLogin ? "Sign in to access home services" : "Create your account to get started"}
           </CardDescription>
         </CardHeader>
 
@@ -131,60 +100,25 @@ const Login = ({ onLogin }: LoginProps) => {
               <>
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name</Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="Enter your full name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required={!isLogin}
-                  />
+                  <Input id="name" type="text" placeholder="Enter your full name" value={name} onChange={(e) => setName(e.target.value)} required={!isLogin} />
                 </div>
-
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone Number</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    placeholder="Enter your phone number"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    required={!isLogin}
-                  />
+                  <Input id="phone" type="tel" placeholder="Enter your phone number" value={phone} onChange={(e) => setPhone(e.target.value)} required={!isLogin} />
                 </div>
               </>
             )}
 
             <div className="space-y-2">
               <Label htmlFor="email">{isLogin ? "Email/Username" : "Email"}</Label>
-              <Input
-                id="email"
-                type={isLogin ? "text" : "email"}
-                placeholder={isLogin ? "HomeServices1" : "Enter your email"}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
+              <Input id="email" type={isLogin ? "text" : "email"} placeholder={isLogin ? "HomeServices1" : "Enter your email"} value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder={isLogin ? "HomeServices1" : "Enter your password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
+                <Input id="password" type={showPassword ? "text" : "password"} placeholder={isLogin ? "HomeServices1" : "Enter your password"} value={password} onChange={(e) => setPassword(e.target.value)} required />
+                <Button type="button" variant="ghost" size="icon" className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8" onClick={() => setShowPassword(!showPassword)}>
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </Button>
               </div>
@@ -193,14 +127,7 @@ const Login = ({ onLogin }: LoginProps) => {
             {!isLogin && (
               <div className="space-y-2">
                 <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  placeholder="Confirm your password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required={!isLogin}
-                />
+                <Input id="confirmPassword" type="password" placeholder="Confirm your password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required={!isLogin} />
               </div>
             )}
 
@@ -210,14 +137,8 @@ const Login = ({ onLogin }: LoginProps) => {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-muted-foreground">
-              {isLogin ? "Don't have an account?" : "Already have an account?"}
-            </p>
-            <Button
-              variant="link"
-              onClick={() => setIsLogin(!isLogin)}
-              className="text-primary-foreground hover:text-primary-foreground/80"
-            >
+            <p className="text-sm text-muted-foreground">{isLogin ? "Don't have an account?" : "Already have an account?"}</p>
+            <Button variant="link" onClick={() => setIsLogin(!isLogin)} className="text-primary-foreground hover:text-primary-foreground/80">
               {isLogin ? "Sign up here" : "Sign in here"}
             </Button>
           </div>
