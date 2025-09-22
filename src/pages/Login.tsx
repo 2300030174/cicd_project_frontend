@@ -10,8 +10,6 @@ interface LoginProps {
   onLogin: () => void;
 }
 
-const BACKEND_URL = "http://backend:5001"; // Updated backend URL
-
 const Login = ({ onLogin }: LoginProps) => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
@@ -28,7 +26,7 @@ const Login = ({ onLogin }: LoginProps) => {
     if (isLogin) {
       // --- LOGIN ---
       try {
-        const res = await fetch(`${BACKEND_URL}/api/login`, {
+        const res = await fetch(`/api/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
@@ -78,7 +76,7 @@ const Login = ({ onLogin }: LoginProps) => {
       }
 
       try {
-        const res = await fetch(`${BACKEND_URL}/api/register`, {
+        const res = await fetch(`/api/register`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, email, password, phone }),
